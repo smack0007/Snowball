@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28922.388
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{47AF4C9A-CB61-4374-B62E-0348D4981AA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{78FF69E5-97D2-4B2F-9723-68F3E128BE04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelCannon", "src\PixelCannon\PixelCannon.csproj", "{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "samples\HelloWorld\HelloWorld.csproj", "{34D2D9E2-6A34-4DE6-A562-A9C505A78238}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{AD267C0B-B550-4BD8-ABFC-CAE705624E32}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34D2D9E2-6A34-4DE6-A562-A9C505A78238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34D2D9E2-6A34-4DE6-A562-A9C505A78238}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34D2D9E2-6A34-4DE6-A562-A9C505A78238}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34D2D9E2-6A34-4DE6-A562-A9C505A78238}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{47AF4C9A-CB61-4374-B62E-0348D4981AA7} = {AD267C0B-B550-4BD8-ABFC-CAE705624E32}
+		{78FF69E5-97D2-4B2F-9723-68F3E128BE04} = {AD267C0B-B550-4BD8-ABFC-CAE705624E32}
+		{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F} = {47AF4C9A-CB61-4374-B62E-0348D4981AA7}
+		{34D2D9E2-6A34-4DE6-A562-A9C505A78238} = {78FF69E5-97D2-4B2F-9723-68F3E128BE04}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8046D655-0DAE-4986-86AE-8CCBE226F68D}
+	EndGlobalSection
+EndGlobal
