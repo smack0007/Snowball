@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PixelCannon.Graphics
+namespace PixelEngineDotNet.Graphics
 {
     public partial class GraphicsContext
     {

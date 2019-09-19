@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Numerics;
 
-namespace PixelCannon
+namespace PixelEngineDotNet
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Rectangle : IEquatable<Rectangle>

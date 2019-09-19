@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PixelCannon
+namespace PixelEngineDotNet
 {
     public static class Guard
     {

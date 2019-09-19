@@ -1,10 +1,10 @@
 ﻿#if GL
 
 using System;
-using static PixelCannon.Graphics.GL;
-using static PixelCannon.Graphics.WGL;
+using static PixelEngineDotNet.Graphics.GL;
+using static PixelEngineDotNet.Graphics.WGL;
 
-namespace PixelCannon.Graphics
+namespace PixelEngineDotNet.Graphics
 {
     public partial class GraphicsContext
     {

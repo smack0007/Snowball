@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace PixelCannon
+namespace PixelEngineDotNet
 {
     public partial class GameWindow : IDisposable
     {

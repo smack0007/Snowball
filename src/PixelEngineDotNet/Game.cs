@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using PixelCannon.Graphics;
+using PixelEngineDotNet.Graphics;
 
-namespace PixelCannon
+namespace PixelEngineDotNet
 {
     public class Game : IDisposable
     {

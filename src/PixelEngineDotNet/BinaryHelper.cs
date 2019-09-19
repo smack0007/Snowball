@@ -1,4 +1,4 @@
-﻿namespace PixelCannon
+﻿namespace PixelEngineDotNet
 {
     public static class BinaryHelper
     {

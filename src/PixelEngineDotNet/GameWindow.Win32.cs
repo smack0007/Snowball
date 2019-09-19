@@ -2,10 +2,10 @@
 
 using System;
 using System.Runtime.InteropServices;
-using static PixelCannon.Win32;
+using static PixelEngineDotNet.Win32;
 using System.Collections.Generic;
 
-namespace PixelCannon
+namespace PixelEngineDotNet
 {
     public partial class GameWindow
     {

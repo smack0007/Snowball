@@ -1,4 +1,4 @@
-﻿namespace PixelCannon.Graphics
+﻿namespace PixelEngineDotNet.Graphics
 {
     public enum PixelMode
     {

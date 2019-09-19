@@ -7,11 +7,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{47AF4C9A-CB6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{78FF69E5-97D2-4B2F-9723-68F3E128BE04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixelCannon", "src\PixelCannon\PixelCannon.csproj", "{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelEngineDotNet", "src\PixelEngineDotNet\PixelEngineDotNet.csproj", "{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "samples\HelloWorld\HelloWorld.csproj", "{34D2D9E2-6A34-4DE6-A562-A9C505A78238}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld", "samples\HelloWorld\HelloWorld.csproj", "{34D2D9E2-6A34-4DE6-A562-A9C505A78238}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{AD267C0B-B550-4BD8-ABFC-CAE705624E32}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PixelEngineDotNet", "PixelEngineDotNet", "{AD267C0B-B550-4BD8-ABFC-CAE705624E32}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection

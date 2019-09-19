@@ -4,7 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace PixelCannon
+namespace PixelEngineDotNet
 {
     public static class Win32
     {

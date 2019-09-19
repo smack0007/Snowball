@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Numerics;
-using PixelCannon.Images;
+using PixelEngineDotNet.Images;
 
-namespace PixelCannon.Graphics
+namespace PixelEngineDotNet.Graphics
 {
     public class Surface
     {
@@ -70,7 +70,7 @@ namespace PixelCannon.Graphics
             }
 
             if (imageData == null)
-                throw new PixelCannonException("Unknown image format.");
+                throw new PixelEngineDotNetException("Unknown image format.");
 
             return new Surface(graphics, imageData.Width, imageData.Height, imageData.Pixels);
         }

@@ -17,11 +17,11 @@
     <Authors>smack0007</Authors>
     <Copyright>Copyright © Zachary Snow $(CurrentYear)</Copyright>
 
-    <PackageProjectUrl>https://github.com/smack0007/PixelCannon/</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/smack0007/PixelCannon/master/License.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/smack0007/PixelEngineDotNet/</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/smack0007/PixelEngineDotNet/master/License.txt</PackageLicenseUrl>
     <PackageTags></PackageTags>
 
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/smack0007/PixelCannon.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/smack0007/PixelEngineDotNet.git</RepositoryUrl>
   </PropertyGroup>
 </Project>

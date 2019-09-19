@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PixelCannon\PixelCannon.csproj" />
+    <ProjectReference Include="..\..\src\PixelEngineDotNet\PixelEngineDotNet.csproj" />
   </ItemGroup>
 
 </Project>

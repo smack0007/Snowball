@@ -4,7 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 
-namespace PixelCannon.Images
+namespace PixelEngineDotNet.Images
 {
     public static class PNG
     {
@@ -62,7 +62,7 @@ namespace PixelCannon.Images
         {
             if (!IsPNGImage(stream))
             {
-                throw new PixelCannonException("PNG header incorrect.");
+                throw new PixelEngineDotNetException("PNG header incorrect.");
             }
 
             stream.Position += HeaderBytes.Length;
@@ -151,7 +151,7 @@ namespace PixelCannon.Images
             }
 
             if (idat == null)
-                throw new PixelCannonException("No IDAT chunk found.");
+                throw new PixelEngineDotNetException("No IDAT chunk found.");
 
             using (MemoryStream chunkDataStream = new MemoryStream(idat))
             {
@@ -176,17 +176,17 @@ namespace PixelCannon.Images
                                 switch (scanlineFilterAlgorithm)
                                 {
                                     case 1: // Sub
-                                        throw new PixelCannonException("Sub filter algorithm in PNG not implemented.");
+                                        throw new PixelEngineDotNetException("Sub filter algorithm in PNG not implemented.");
 
                                     case 2: // Up
                                         scanline[x] = (byte)(scanline[x] + previousScanline[x]);
                                         break;
 
                                     case 3: // Average
-                                        throw new PixelCannonException("Average filter algorithm in PNG not implemented.");
+                                        throw new PixelEngineDotNetException("Average filter algorithm in PNG not implemented.");
 
                                     case 4: // Paeth
-                                        throw new PixelCannonException("Paeth filter algorithm in PNG not implemented.");
+                                        throw new PixelEngineDotNetException("Paeth filter algorithm in PNG not implemented.");
                                 }
                             }
                         }
@@ -225,7 +225,7 @@ namespace PixelCannon.Images
                         break;
 
                     default:
-                        throw new PixelCannonException($"PNG loading not implemented for images with {bytesPerPixel} bytes per pixel.");
+                        throw new PixelEngineDotNetException($"PNG loading not implemented for images with {bytesPerPixel} bytes per pixel.");
                 }
             }
 

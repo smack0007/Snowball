@@ -1,4 +1,4 @@
-﻿namespace PixelCannon.Images
+﻿namespace PixelEngineDotNet.Images
 {
     public class ImageData
     {
