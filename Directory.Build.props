@@ -6,22 +6,20 @@
     <OutputPath>$([System.IO.Path]::GetFullPath('$(BinDirectory)$(Configuration)/$(PlatformTarget)'))/$(MSBuildProjectName)</OutputPath>
     <LangVersion>latest</LangVersion>
 
-    <CurrentYear>$([System.DateTime]::Now.ToString(yy))</CurrentYear>
-    <CurrentMonth>$([System.DateTime]::Now.ToString(MM))</CurrentMonth>
-
-    <PatchNumber Condition=" $(PatchNumber) == '' ">0</PatchNumber>
-    <BuildNumber Condition=" $(BuildNumber) == '' ">0</BuildNumber>
-    <VersionPrefix>$(CurrentYear).$(CurrentMonth).$(PatchNumber)</VersionPrefix>
-    <VersionPostfix>$(BuildNumber)</VersionPostfix>
-
     <Authors>smack0007</Authors>
-    <Copyright>Copyright © Zachary Snow $(CurrentYear)</Copyright>
+    <Copyright>Copyright © Zachary Snow $([System.DateTime]::Now.ToString(yyyy))</Copyright>
 
-    <PackageProjectUrl>https://github.com/smack0007/PixelEngineDotNet/</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/smack0007/PixelEngineDotNet/master/License.txt</PackageLicenseUrl>
-    <PackageTags></PackageTags>
+    <VersionPrefix>0.0.1</VersionPrefix>
+
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
 
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/smack0007/PixelEngineDotNet.git</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)License.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)/build/Project.props" />
+  <Import Project="$(MSBuildThisFileDirectory)/build/GitVersion.targets" />
 </Project>

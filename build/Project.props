@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <RepositoryUrl>https://github.com/smack0007/PixelEngineDotNet.git</RepositoryUrl>
+
+    <PackageProjectUrl>https://github.com/smack0007/PixelEngineDotNet/</PackageProjectUrl>
+    <PackageTags>C#;.NET;Graphics</PackageTags>
+
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+</Project>
