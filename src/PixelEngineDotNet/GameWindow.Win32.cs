@@ -9,7 +9,7 @@ namespace PixelEngineDotNet
 {
     public partial class GameWindow
     {
-        // This static field exists so that the delegat pointing to StaticWindowProc won't be GC'd.
+        // This static field exists so that the delegate pointing to StaticWindowProc won't be GC'd.
         private static WndProc s_windowProc = StaticWindowProc;
         private static ushort s_windowClass;
         private static readonly Dictionary<IntPtr, GameWindow> s_windows = new Dictionary<IntPtr, GameWindow>();

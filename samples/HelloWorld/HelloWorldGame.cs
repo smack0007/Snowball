@@ -7,10 +7,14 @@ namespace HelloWorld
 {
     public class HelloWorldGame : Game
     {
-        private readonly Random _random = new Random();
-        private readonly byte[] _randomBuffer = new byte[3];
+        private const int SNOWBALL_COUNT = 300;
+        private const float SNOWBALL_MOVEMENT_FACTOR = 10.0f;
 
-        private Surface _surface;
+        private Vector2 _center;
+        private Surface _backgroundSurface;
+        private Surface _snowballSurface;
+        private Vector2[] _snowballVelocities;
+        private Vector2[] _snowballPositions;
 
         public static void Main()
         {
@@ -23,28 +27,67 @@ namespace HelloWorld
                 windowSize: new Size(1024, 960),
                 backBufferSize: new Size(256, 240))
         {
-            _surface = Surface.FromFile(Graphics, "Snowball.png");
-            _random.NextBytes(_randomBuffer);
-        }
+            var randomBuffer = new byte[3];
 
-        protected override void Draw()
-        {
-            var center = new Vector2(Graphics.BackBuffer.Width / 2.0f, Graphics.BackBuffer.Height / 2.0f);
-            var totalDistance = Vector2.Distance(Vector2.Zero, center);
+            var random = new Random();
+            random.NextBytes(randomBuffer);
 
-            Graphics.BackBuffer.FillRect((pos) =>
+            _center = new Vector2(Graphics.BackBuffer.Width / 2.0f, Graphics.BackBuffer.Height / 2.0f);
+            var totalDistance = Vector2.Distance(Vector2.Zero, _center);
+
+            _backgroundSurface = new Surface(Graphics, Graphics.BackBuffer.Width, Graphics.BackBuffer.Height);
+            _backgroundSurface.FillRect((pos) =>
             {
-                float factor = 1.0f - Vector2.Distance(pos.ToVector2(), center) / totalDistance;
+                float factor = 1.0f - Vector2.Distance(pos.ToVector2(), _center) / totalDistance;
                 return new Pixel
                 {
-                    R = unchecked((byte)(_randomBuffer[0] * factor)),
-                    G = unchecked((byte)(_randomBuffer[1] * factor)),
-                    B = unchecked((byte)(_randomBuffer[2] * factor)),
+                    R = unchecked((byte)(randomBuffer[0] * factor)),
+                    G = unchecked((byte)(randomBuffer[1] * factor)),
+                    B = unchecked((byte)(randomBuffer[2] * factor)),
                     A = 255
                 };
             }, new Rectangle(0, 0, Graphics.BackBuffer.Width, Graphics.BackBuffer.Height));
 
-            Graphics.BackBuffer.DrawSprite(_surface, Vector2.Zero, pixelMode: PixelMode.AlphaBlend);
+            _snowballSurface = Surface.FromFile(Graphics, "Snowball.png");
+            _snowballVelocities = new Vector2[SNOWBALL_COUNT];
+            for (int i = 0; i < SNOWBALL_COUNT; i++)
+                _snowballVelocities[i] = new Vector2(
+                    1.0f * (random.Next(101) / 100.0f) * (random.Next(101) % 2 == 0 ? 1.0f : -1.0f),
+                    1.0f * (random.Next(101) / 100.0f) * (random.Next(101) % 2 == 0 ? 1.0f : -1.0f));
+
+            _snowballPositions = new Vector2[SNOWBALL_COUNT];
+            for (int i = 0; i < SNOWBALL_COUNT; i++)
+                _snowballPositions[i] = _center;
+        }
+
+        protected override void Update(float elapsed)
+        {
+            for (int i = 0; i < SNOWBALL_COUNT; i++)
+            {
+                _snowballPositions[i].X += _snowballVelocities[i].X * SNOWBALL_MOVEMENT_FACTOR;
+                _snowballPositions[i].Y += _snowballVelocities[i].Y * SNOWBALL_MOVEMENT_FACTOR;
+
+                if (_snowballPositions[i].X < 0 ||
+                    _snowballPositions[i].Y < 0 ||
+                    _snowballPositions[i].X > Graphics.BackBuffer.Width ||
+                    _snowballPositions[i].Y > Graphics.BackBuffer.Height)
+                {
+                    _snowballPositions[i] = _center;
+                }
+            }
+        }
+
+        protected override void Draw()
+        {
+            Graphics.BackBuffer.Blit(_backgroundSurface, Point.Zero);
+
+            for (int i = 0; i < SNOWBALL_COUNT; i++)
+            {
+                Graphics.BackBuffer.DrawSprite(
+                    _snowballSurface,
+                    _snowballPositions[i],
+                    pixelMode: PixelMode.AlphaBlend);
+            }
         }
     }
 }

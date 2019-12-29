@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using PixelEngineDotNet.Images;
 
 namespace PixelEngineDotNet.Graphics
@@ -28,7 +29,7 @@ namespace PixelEngineDotNet.Graphics
             Pixels = new Pixel[width * height];
         }
 
-        public Surface(GraphicsContext graphics, int width, int height, Pixel[] pixels)
+        public Surface(GraphicsContext graphics, int width, int height, Pixel[] pixels = null)
         {
             // At this point and time there is no actual need to have a reference to the GraphicsContext.
             // The reference exists for future proofing in the event that something needs to be created on the GPU
@@ -37,7 +38,7 @@ namespace PixelEngineDotNet.Graphics
                 throw new ArgumentNullException(nameof(graphics));
 
             if (pixels == null)
-                throw new ArgumentNullException(nameof(pixels));
+                pixels = new Pixel[width * height];
 
             var pixelsLength = width * height;
             if (pixels.Length != pixelsLength)
@@ -89,24 +90,56 @@ namespace PixelEngineDotNet.Graphics
             }
         }
 
-        public void Blit(Surface surface, Point destination, Rectangle? source = null)
+        public void Blit(Surface surface, in Point destination, Rectangle? source = null)
         {
-            if (surface == null)
-                throw new ArgumentNullException(nameof(surface));
+            Guard.NotNull(surface, nameof(surface));
 
             if (source == null)
                 source = new Rectangle(0, 0, surface.Width, surface.Height);
 
             for (int y = 0; y < source.Value.Height; y++)
             {
+                int srcY = source.Value.Y + y;
+
+                if (srcY < 0)
+                    continue;
+
+                if (srcY >= surface.Height)
+                    break;
+
+                int destY = (int)(destination.Y + y);
+
+                if (destY < 0)
+                    continue;
+
+                if (destY >= Height)
+                    break;
+
                 for (int x = 0; x < source.Value.Width; x++)
                 {
-                    this[destination.X + x, destination.Y + y] = surface[source.Value.X + x, source.Value.Y + y];
+                    int srcX = source.Value.X + x;
+
+                    if (srcX < 0)
+                        continue;
+
+                    if (srcX >= surface.Width)
+                        break;
+
+                    int destX = (int)(destination.X + x);
+
+                    if (destX < 0)
+                        continue;
+
+                    if (destX >= Width)
+                        break;
+
+                    this[destX, destY] = surface[srcX, srcY];
                 }
             }
         }
 
-        private void DrawPixel(ref Pixel source, ref Pixel destination, PixelMode pixelMode)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void DrawPixel(ref Pixel source, ref Pixel destination, PixelMode pixelMode)
         {
             switch (pixelMode)
             {
@@ -155,21 +188,52 @@ namespace PixelEngineDotNet.Graphics
             }
         }
 
-        public void DrawSprite(Surface sourceSurface, Vector2 destination, Rectangle? source = null, PixelMode pixelMode = PixelMode.Overwrite)
+        public void DrawSprite(Surface surface, in Vector2 destination, Rectangle? source = null, PixelMode pixelMode = PixelMode.Overwrite)
         {
-            if (sourceSurface == null)
-                throw new ArgumentNullException(nameof(sourceSurface));
+            Guard.NotNull(surface, nameof(surface));
 
             if (source == null)
-                source = new Rectangle(0, 0, sourceSurface.Width, sourceSurface.Height);
+                source = new Rectangle(0, 0, surface.Width, surface.Height);
 
             for (int y = 0; y < source.Value.Height; y++)
             {
+                int srcY = source.Value.Y + y;
+
+                if (srcY < 0)
+                    continue;
+
+                if (srcY >= surface.Height)
+                    break;
+
+                int destY = (int)(destination.Y + y);
+
+                if (destY < 0)
+                    continue;
+
+                if (destY >= Height)
+                    break;
+
                 for (int x = 0; x < source.Value.Width; x++)
                 {
+                    int srcX = source.Value.X + x;
+
+                    if (srcX < 0)
+                        continue;
+
+                    if (srcX >= surface.Width)
+                        break;
+
+                    int destX = (int)(destination.X + x);
+
+                    if (destX < 0)
+                        continue;
+
+                    if (destX >= Width)
+                        break;
+
                     DrawPixel(
-                        ref sourceSurface[source.Value.X + x, source.Value.Y + y],
-                        ref this[(int)(destination.X + x), (int)(destination.Y + y)],
+                        ref surface[srcX, srcY],
+                        ref this[destX, destY],
                         pixelMode);
                 }
             }
