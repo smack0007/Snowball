@@ -36,7 +36,7 @@ namespace HelloWorld
             var totalDistance = Vector2.Distance(Vector2.Zero, _center);
 
             _backgroundSurface = new Surface(Graphics, Graphics.BackBuffer.Width, Graphics.BackBuffer.Height);
-            _backgroundSurface.FillRect((pos) =>
+            Graphics.FillRect(_backgroundSurface, (pos) =>
             {
                 float factor = 1.0f - Vector2.Distance(pos.ToVector2(), _center) / totalDistance;
                 return new Pixel
@@ -79,11 +79,12 @@ namespace HelloWorld
 
         protected override void Draw()
         {
-            Graphics.BackBuffer.Blit(_backgroundSurface, Point.Zero);
+            Graphics.Blit(Graphics.BackBuffer, _backgroundSurface, Point.Zero);
 
             for (int i = 0; i < SNOWBALL_COUNT; i++)
             {
-                Graphics.BackBuffer.DrawSprite(
+                Graphics.DrawSprite(
+                    Graphics.BackBuffer, 
                     _snowballSurface,
                     _snowballPositions[i],
                     pixelMode: PixelMode.AlphaBlend);
