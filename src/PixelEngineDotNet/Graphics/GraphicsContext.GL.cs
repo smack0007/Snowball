@@ -8,9 +8,9 @@ namespace PixelEngineDotNet.Graphics
 {
     public partial class GraphicsContext
     {
-        private void PlatformInitialize(GameWindow window, Size backBufferSize)
+        private void PlatformInitialize(Size backBufferSize)
         {
-            wglInit(window.Handle, 2, 1);
+            wglInit(Window.Handle, 2, 1);
             glInit(wglGetProcAddress);
 
             glClearColor(0, 0, 0, 1.0f);

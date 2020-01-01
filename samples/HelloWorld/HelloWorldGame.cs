@@ -36,7 +36,8 @@ namespace HelloWorld
             var totalDistance = Vector2.Distance(Vector2.Zero, _center);
 
             _backgroundSurface = new Surface(Graphics, Graphics.BackBuffer.Width, Graphics.BackBuffer.Height);
-            Graphics.FillRect(_backgroundSurface, (pos) =>
+            Graphics.BeginDraw(_backgroundSurface);
+            Graphics.DrawFilledRectangle((pos) =>
             {
                 float factor = 1.0f - Vector2.Distance(pos.ToVector2(), _center) / totalDistance;
                 return new Pixel
@@ -47,6 +48,7 @@ namespace HelloWorld
                     A = 255
                 };
             }, new Rectangle(0, 0, Graphics.BackBuffer.Width, Graphics.BackBuffer.Height));
+            Graphics.EndDraw();
 
             _snowballSurface = Surface.FromFile(Graphics, "Snowball.png");
             _snowballVelocities = new Vector2[SNOWBALL_COUNT];
@@ -81,14 +83,17 @@ namespace HelloWorld
         {
             Graphics.Blit(Graphics.BackBuffer, _backgroundSurface, Point.Zero);
 
+            Graphics.BeginDraw(Graphics.BackBuffer);
+
             for (int i = 0; i < SNOWBALL_COUNT; i++)
             {
                 Graphics.DrawSprite(
-                    Graphics.BackBuffer, 
                     _snowballSurface,
                     _snowballPositions[i],
                     pixelMode: PixelMode.AlphaBlend);
             }
+
+            Graphics.EndDraw();
         }
     }
 }
