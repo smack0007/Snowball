@@ -31,6 +31,8 @@ namespace PixelEngineDotNet
             Window = new GameWindow(windowSize);
 
             Graphics = new GraphicsContext(Window, backBufferSize.Value);
+
+            _stopwatch = new Stopwatch();
         }
 
         public void Dispose()
@@ -40,7 +42,7 @@ namespace PixelEngineDotNet
 
         public void Run()
         {
-            _stopwatch = Stopwatch.StartNew();
+            _stopwatch.Restart();
 
             Window.Run(Tick);
         }

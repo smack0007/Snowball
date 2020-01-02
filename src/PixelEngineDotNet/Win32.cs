@@ -102,7 +102,7 @@ namespace PixelEngineDotNet
             public IntPtr hIcon;
             public IntPtr hCursor;
             public IntPtr hbrBackground;
-            public string lpszMenuName;
+            public string? lpszMenuName;
             public string lpszClassName;
             public IntPtr hIconSm;
         }
@@ -139,7 +139,7 @@ namespace PixelEngineDotNet
         public static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
 
         [DllImport("kernel32.dll", EntryPoint = "GetModuleHandle")]
-        public static extern IntPtr GetModuleHandle(string module);
+        public static extern IntPtr GetModuleHandle(string? module);
 
         [DllImport("gdi32.dll", EntryPoint = "GetStockObject")]
         public static extern IntPtr GetStockObject(int fnObject);

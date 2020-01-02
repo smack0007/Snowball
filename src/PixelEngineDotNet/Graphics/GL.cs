@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+#nullable disable
+
 namespace PixelEngineDotNet.Graphics
 {
     public static unsafe class GL

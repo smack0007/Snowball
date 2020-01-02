@@ -5,7 +5,7 @@ namespace PixelEngineDotNet
 {
     public partial class GameWindow : IDisposable
     {
-        private string _title;
+        private string _title = "";
         private int _x;
         private int _y;
         private int _width;
@@ -88,13 +88,13 @@ namespace PixelEngineDotNet
 
         public bool IsClosed { get; private set; }
 
-        public event EventHandler<EventArgs> PositionChanged;
+        public event EventHandler<EventArgs>? PositionChanged;
 
-        public event EventHandler<EventArgs> SizeChanged;
+        public event EventHandler<EventArgs>? SizeChanged;
 
-        public event EventHandler<CancelEventArgs> Closing;
+        public event EventHandler<CancelEventArgs>? Closing;
 
-        public event EventHandler<EventArgs> Closed;
+        public event EventHandler<EventArgs>? Closed;
 
         public GameWindow(Size size)
         {

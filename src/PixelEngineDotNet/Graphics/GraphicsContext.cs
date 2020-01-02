@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -13,14 +14,22 @@ namespace PixelEngineDotNet.Graphics
         private readonly uint _backBufferTexture;
 
         private bool _drawInProgress;
-        private Surface _drawTarget;
+        private Surface _drawTarget = null!;
 
         public GraphicsContext(GameWindow window, Size backBufferSize)
         {
             Guard.NotNull(window, nameof(window));
 
             Window = window;
-            PlatformInitialize(backBufferSize);
+            
+            var result = PlatformInitialize(backBufferSize);
+
+            BackBuffer = result.BackBuffer;
+        }
+
+        protected struct PlatformInitializeResult
+        {
+            public Surface BackBuffer { get; set; }
         }
 
         public void Present()
@@ -108,7 +117,7 @@ namespace PixelEngineDotNet.Graphics
             EnsureDrawInProgress();
 
             _drawInProgress = false;
-            _drawTarget = null;
+            _drawTarget = null!;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

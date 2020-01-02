@@ -8,7 +8,7 @@ namespace PixelEngineDotNet.Graphics
 {
     public partial class GraphicsContext
     {
-        private void PlatformInitialize(Size backBufferSize)
+        private PlatformInitializeResult PlatformInitialize(Size backBufferSize)
         {
             wglInit(Window.Handle, 2, 1);
             glInit(wglGetProcAddress);
@@ -28,15 +28,20 @@ namespace PixelEngineDotNet.Graphics
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int)GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int)GL_NEAREST);
 
-            BackBuffer = new Surface(backBufferSize.Width, backBufferSize.Height);
+            var backBuffer = new Surface(this, backBufferSize.Width, backBufferSize.Height);
 
             unsafe
             {
-                fixed (void* surfacePtr = BackBuffer.Pixels)
+                fixed (void* surfacePtr = backBuffer.Pixels)
                 {
                     glTexImage2D(GL_TEXTURE_2D, 0, (int)GL_RGBA, backBufferSize.Width, backBufferSize.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, surfacePtr);
                 }
             }
+
+            return new PlatformInitializeResult()
+            {
+                BackBuffer = backBuffer
+            };
         }
 
         private void PlatformPresent()

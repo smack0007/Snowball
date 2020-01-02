@@ -76,8 +76,8 @@ namespace PixelEngineDotNet.Images
             byte interlaceMethod = 0;
 
             int bytesPerPixel = 0;
-            byte[] rawPixels = null;
-            byte[] idat = null;
+            byte[] rawPixels = Array.Empty<Byte>();
+            byte[]? idat = null;
 
             while (true)
             {

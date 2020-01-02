@@ -16,14 +16,7 @@ namespace PixelEngineDotNet.Graphics
 
         internal Pixel[] Pixels { get; }
 
-        internal Surface(int width, int height)
-        {
-            Width = width;
-            Height = height;
-            Pixels = new Pixel[width * height];
-        }
-
-        public Surface(GraphicsContext graphics, int width, int height, Pixel[] pixels = null)
+        public Surface(GraphicsContext graphics, int width, int height, Pixel[]? pixels = null)
         {
             // At this point and time there is no actual need to have a reference to the GraphicsContext.
             // The reference exists for future proofing in the event that something needs to be created on the GPU
@@ -57,7 +50,7 @@ namespace PixelEngineDotNet.Graphics
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
-            ImageData imageData = null;
+            ImageData? imageData = null;
 
             if (PNG.IsPNGImage(stream))
             {

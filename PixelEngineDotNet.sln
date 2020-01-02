@@ -16,6 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PixelEngineDotNet", "PixelE
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{CE793775-95E6-4346-A407-A67E0267D9F1}"
+	ProjectSection(SolutionItems) = preProject
+		build\Project.props = build\Project.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +44,7 @@ Global
 		{78FF69E5-97D2-4B2F-9723-68F3E128BE04} = {AD267C0B-B550-4BD8-ABFC-CAE705624E32}
 		{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F} = {47AF4C9A-CB61-4374-B62E-0348D4981AA7}
 		{34D2D9E2-6A34-4DE6-A562-A9C505A78238} = {78FF69E5-97D2-4B2F-9723-68F3E128BE04}
+		{CE793775-95E6-4346-A407-A67E0267D9F1} = {AD267C0B-B550-4BD8-ABFC-CAE705624E32}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8046D655-0DAE-4986-86AE-8CCBE226F68D}
