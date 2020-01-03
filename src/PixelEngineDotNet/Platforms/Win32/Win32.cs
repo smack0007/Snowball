@@ -1,10 +1,8 @@
-﻿#if WIN32
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace PixelEngineDotNet
+namespace PixelEngineDotNet.Platforms.Win32
 {
     public static class Win32
     {
@@ -193,5 +191,3 @@ namespace PixelEngineDotNet
         }
     }
 }
-
-#endif

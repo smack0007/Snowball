@@ -30,7 +30,7 @@ namespace PixelEngineDotNet
             if (backBufferSize == null)
                 backBufferSize = windowSize;
 
-            Window = new GameWindow(windowSize);
+            Window = PlatformFactory.CreateGameWindow(windowSize);
 
             Graphics = PlatformFactory.CreateGraphicsContext(Window, backBufferSize.Value);
 

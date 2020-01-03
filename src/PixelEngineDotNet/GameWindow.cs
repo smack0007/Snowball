@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace PixelEngineDotNet
 {
-    public partial class GameWindow : IDisposable
+    public abstract class GameWindow : IDisposable
     {
         private string _title = "";
         private int _x;
@@ -88,36 +88,37 @@ namespace PixelEngineDotNet
 
         public bool IsClosed { get; private set; }
 
-        public event EventHandler<EventArgs>? PositionChanged;
+        public Action? PositionChanged;
 
-        public event EventHandler<EventArgs>? SizeChanged;
+        public Action? SizeChanged;
 
-        public event EventHandler<CancelEventArgs>? Closing;
+        public Action<CancelEventArgs>? Closing;
 
-        public event EventHandler<EventArgs>? Closed;
+        public Action? Closed;
 
-        public GameWindow(Size size)
+        internal GameWindow(Size size)
         {
             PlatformInitialize(size);
         }
 
-        ~GameWindow()
-        {
-            Dispose(false);
-        }
+        protected abstract void PlatformInitialize(Size size);
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            PlatformDispose();
         }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            PlatformDispose(disposing);
-        }
+        protected abstract void PlatformDispose();
 
-        private bool TriggerClose()
+        protected abstract IntPtr PlatformGetHandle();
+
+        protected abstract void PlatformSetTitle(string title);
+
+        protected abstract void PlatformSetPosition(int x, int y);
+
+        protected abstract void PlatformSetSize(int width, int height);
+
+        protected bool TriggerClose()
         {
             CancelEventArgs cancelEventArgs = new CancelEventArgs();
             OnClosing(cancelEventArgs);
@@ -130,41 +131,41 @@ namespace PixelEngineDotNet
             return true;
         }
 
-        private void TriggerPositionChanged(int x, int y)
+        protected void TriggerPositionChanged(int x, int y)
         {
             _x = x;
             _y = y;
 
-            OnPositionChanged(EventArgs.Empty);
+            OnPositionChanged();
         }
 
-        private void TriggerSizeChanged(int width, int height)
+        protected void TriggerSizeChanged(int width, int height)
         {
             _width = width;
             _height = height;
 
-            OnSizeChanged(EventArgs.Empty);
+            OnSizeChanged();
         }
 
-        protected virtual void OnPositionChanged(EventArgs e)
+        protected virtual void OnPositionChanged()
         {
-            PositionChanged?.Invoke(this, e);
+            PositionChanged?.Invoke();
         }
 
-        protected virtual void OnSizeChanged(EventArgs e)
+        protected virtual void OnSizeChanged()
         {
-            SizeChanged?.Invoke(this, e);
+            SizeChanged?.Invoke();
         }
 
         protected virtual void OnClosing(CancelEventArgs e)
         {
-            Closing?.Invoke(this, e);
+            Closing?.Invoke(e);
         }
 
         protected virtual void OnClose(EventArgs e)
         {
             IsClosed = true;
-            Closed?.Invoke(this, e);
+            Closed?.Invoke();
         }
 
         public void Show()
@@ -172,10 +173,14 @@ namespace PixelEngineDotNet
             PlatformShow();
         }
 
+        protected abstract void PlatformShow();
+
         public void Hide()
         {
             PlatformHide();
         }
+
+        protected abstract void PlatformHide();
 
         public void Run(Action onIdle)
         {
@@ -194,5 +199,7 @@ namespace PixelEngineDotNet
                 onIdle();
             }
         }
+
+        protected abstract void PlatformPollEvents();
     }
 }

@@ -1,24 +1,27 @@
-﻿#if WIN32
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
-using static PixelEngineDotNet.Win32;
+using static PixelEngineDotNet.Platforms.Win32.Win32;
 using System.Collections.Generic;
 
 namespace PixelEngineDotNet
 {
-    public partial class GameWindow
+    public class Win32GameWindow : GameWindow
     {
         // This static field exists so that the delegate pointing to StaticWindowProc won't be GC'd.
         private static WndProc s_windowProc = StaticWindowProc;
         private static ushort s_windowClass;
-        private static readonly Dictionary<IntPtr, GameWindow> s_windows = new Dictionary<IntPtr, GameWindow>();
+        private static readonly Dictionary<IntPtr, Win32GameWindow> s_windows = new Dictionary<IntPtr, Win32GameWindow>();
 
         private IntPtr _hWnd;
         private int _borderWidth;
         private int _borderHeight;
 
-        private void PlatformInitialize(Size size)
+        public Win32GameWindow(Size size)
+            : base(size)
+        {
+        }
+
+        protected override void PlatformInitialize(Size size)
         {
             IntPtr hInstance = GetModuleHandle(null);
 
@@ -104,51 +107,48 @@ namespace PixelEngineDotNet
             return DefWindowProc(_hWnd, msg, wParam, lParam);
         }
 
-        private void PlatformDispose(bool disposing)
+        protected override void PlatformDispose()
         {
             s_windows.Remove(_hWnd);
 
-            if (disposing)
+            if (_hWnd != IntPtr.Zero)
             {
-                if (_hWnd != IntPtr.Zero)
-                {
-                    DestroyWindow(_hWnd);
-                }
+                DestroyWindow(_hWnd);
             }
         }
 
-        private IntPtr PlatformGetHandle()
+        protected override IntPtr PlatformGetHandle()
         {
             return _hWnd;
         }
 
-        private void PlatformSetTitle(string title)
+        protected override void PlatformSetTitle(string title)
         {
             SetWindowText(_hWnd, title);
         }
 
-        private void PlatformSetPosition(int x, int y)
+        protected override void PlatformSetPosition(int x, int y)
         {
             SetWindowPos(_hWnd, IntPtr.Zero, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
         }
 
-        private void PlatformSetSize(int width, int height)
+        protected override void PlatformSetSize(int width, int height)
         {
             SetWindowPos(_hWnd, IntPtr.Zero, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER);
         }
 
-        private void PlatformShow()
+        protected override void PlatformShow()
         {
             ShowWindow(_hWnd, SW_SHOWNORMAL);
             UpdateWindow(_hWnd);
         }
 
-        private void PlatformHide()
+        protected override void PlatformHide()
         {
             ShowWindow(_hWnd, SW_HIDE);
         }
 
-        private void PlatformPollEvents()
+        protected override void PlatformPollEvents()
         {
             while (PeekMessage(out var message, IntPtr.Zero, 0, 0, PM_REMOVE))
             {
@@ -158,5 +158,3 @@ namespace PixelEngineDotNet
         }
     }
 }
-
-#endif
