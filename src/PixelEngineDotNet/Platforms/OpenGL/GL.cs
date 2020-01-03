@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 #nullable disable
 
-namespace PixelEngineDotNet.Graphics
+namespace PixelEngineDotNet.Platforms.OpenGL
 {
     public static unsafe class GL
     {

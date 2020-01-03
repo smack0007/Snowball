@@ -1,14 +1,19 @@
-﻿#if GL
+﻿using PixelEngineDotNet.Graphics;
+using static PixelEngineDotNet.Platforms.OpenGL.GL;
+using static PixelEngineDotNet.Platforms.Win32.WGL;
 
-using System;
-using static PixelEngineDotNet.Graphics.GL;
-using static PixelEngineDotNet.Graphics.WGL;
-
-namespace PixelEngineDotNet.Graphics
+namespace PixelEngineDotNet.Platforms.Software
 {
-    public partial class GraphicsContext
+    public class SoftwareGraphicsContext : GraphicsContext
     {
-        private PlatformInitializeResult PlatformInitialize(Size backBufferSize)
+        private uint _backBufferTexture;
+
+        public SoftwareGraphicsContext(GameWindow window, Size backBufferSize)
+            : base(window, backBufferSize)
+        {
+        }
+
+        protected override PlatformInitializeResult PlatformInitialize(Size backBufferSize)
         {
             wglInit(Window.Handle, 2, 1);
             glInit(wglGetProcAddress);
@@ -44,7 +49,12 @@ namespace PixelEngineDotNet.Graphics
             };
         }
 
-        private void PlatformPresent()
+        protected override void PlatformDispose()
+        {
+            // TODO: glDeleteTextures(1, &_backBufferTexture);
+        }
+
+        protected override void PlatformPresent()
         {
             glClear(GL_COLOR_BUFFER_BIT);
 
@@ -73,5 +83,3 @@ namespace PixelEngineDotNet.Graphics
         }
     }
 }
-
-#endif

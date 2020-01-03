@@ -3,7 +3,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace PixelEngineDotNet.Graphics
+namespace PixelEngineDotNet.Platforms.Win32
 {
     public static class WGL
     {

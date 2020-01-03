@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace PixelEngineDotNet.Graphics
 {
-    public partial class GraphicsContext
+    public abstract class GraphicsContext : IDisposable
     {
         public GameWindow Window { get; }
 
         public Surface BackBuffer { get; private set; }
 
-        private readonly uint _backBufferTexture;
-
         private bool _drawInProgress;
         private Surface _drawTarget = null!;
 
-        public GraphicsContext(GameWindow window, Size backBufferSize)
+        internal GraphicsContext(GameWindow window, Size backBufferSize)
         {
             Guard.NotNull(window, nameof(window));
 
@@ -32,10 +29,21 @@ namespace PixelEngineDotNet.Graphics
             public Surface BackBuffer { get; set; }
         }
 
+        protected abstract PlatformInitializeResult PlatformInitialize(Size backBufferSize);
+
+        public void Dispose()
+        {
+            PlatformDispose();
+        }
+
+        protected abstract void PlatformDispose();
+
         public void Present()
         {
             PlatformPresent();
         }
+
+        protected abstract void PlatformPresent();
 
         public void Clear(Surface surface, Pixel pixel)
         {

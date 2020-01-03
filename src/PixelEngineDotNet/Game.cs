@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using PixelEngineDotNet.Graphics;
+using PixelEngineDotNet.Platforms;
+using PixelEngineDotNet.Platforms.Software;
 
 namespace PixelEngineDotNet
 {
@@ -30,7 +32,7 @@ namespace PixelEngineDotNet
 
             Window = new GameWindow(windowSize);
 
-            Graphics = new GraphicsContext(Window, backBufferSize.Value);
+            Graphics = PlatformFactory.CreateGraphicsContext(Window, backBufferSize.Value);
 
             _stopwatch = new Stopwatch();
         }
