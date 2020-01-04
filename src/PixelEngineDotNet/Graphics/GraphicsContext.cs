@@ -11,7 +11,7 @@ namespace PixelEngineDotNet.Graphics
         public Surface BackBuffer { get; private set; }
 
         private bool _drawInProgress;
-        private Surface _drawTarget = null!;
+        protected Surface DrawTarget { get; set; } = null!;
 
         internal GraphicsContext(GameWindow window, Size backBufferSize)
         {
@@ -45,13 +45,40 @@ namespace PixelEngineDotNet.Graphics
 
         protected abstract void PlatformPresent();
 
+        internal uint AllocateSurface(int width, int height, Pixel[]? pixels = null)
+        {
+            if (pixels != null)
+            {
+                var pixelsLength = width * height;
+             
+                if (pixels.Length != pixelsLength)
+                    throw new ArgumentException($"Expected length of pixels array to be {pixelsLength} but was {pixels.Length}.", nameof(pixels));
+            }
+            else
+            {
+                pixels = new Pixel[width * height];
+            }
+
+            return PlatformAllocateSurface(width, height, pixels);
+        }
+
+        protected abstract uint PlatformAllocateSurface(int width, int height, Pixel[] pixels);
+
+        internal Pixel[] GetSurfacePixels(Surface surface)
+        {
+            return PlatformGetSurfacePixels(surface);
+        }
+
+        protected abstract Pixel[] PlatformGetSurfacePixels(Surface surface);
+
         public void Clear(Surface surface, Pixel pixel)
         {
-            for (int i = 0; i < surface.Pixels.Length; i++)
-            {
-                surface.Pixels[i] = pixel;
-            }
+            Guard.NotNull(surface, nameof(surface));
+
+            PlatformClear(surface, pixel);
         }
+
+        protected abstract void PlatformClear(Surface surface, Pixel pixel);
 
         public void Blit(Surface destinationSurface, Surface sourceSurface, in Point destination, Rectangle? source = null)
         {
@@ -61,47 +88,10 @@ namespace PixelEngineDotNet.Graphics
             if (source == null)
                 source = new Rectangle(0, 0, sourceSurface.Width, sourceSurface.Height);
 
-            for (int y = 0; y < source.Value.Height; y++)
-            {
-                int srcY = source.Value.Y + y;
-
-                if (srcY < 0)
-                    continue;
-
-                if (srcY >= sourceSurface.Height)
-                    break;
-
-                int destY = (int)(destination.Y + y);
-
-                if (destY < 0)
-                    continue;
-
-                if (destY >= destinationSurface.Height)
-                    break;
-
-                for (int x = 0; x < source.Value.Width; x++)
-                {
-                    int srcX = source.Value.X + x;
-
-                    if (srcX < 0)
-                        continue;
-
-                    if (srcX >= sourceSurface.Width)
-                        break;
-
-                    int destX = (int)(destination.X + x);
-
-                    if (destX < 0)
-                        continue;
-
-                    if (destX >= destinationSurface.Width)
-                        break;
-
-                    destinationSurface.Pixels[destY * destinationSurface.Width + destX] =
-                        sourceSurface.Pixels[srcY * sourceSurface.Width + srcX];
-                }
-            }
+            PlatformBlit(destinationSurface, sourceSurface, destination, source.Value);
         }
+
+        protected abstract void PlatformBlit(Surface destinationSurface, Surface sourceSurface, in Point destination, Rectangle source);
 
         public void BeginDraw(Surface surface)
         {
@@ -111,7 +101,7 @@ namespace PixelEngineDotNet.Graphics
                 throw new PixelEngineDotNetException("Draw is already in progress.");
 
             _drawInProgress = true;
-            _drawTarget = surface;
+            DrawTarget = surface;
         }
 
         private void EnsureDrawInProgress()
@@ -125,68 +115,28 @@ namespace PixelEngineDotNet.Graphics
             EnsureDrawInProgress();
 
             _drawInProgress = false;
-            _drawTarget = null!;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void DrawPixel(ref Pixel destination, ref Pixel source, PixelMode pixelMode)
-        {
-            switch (pixelMode)
-            {
-                case PixelMode.Overwrite:
-                    destination.R = source.R;
-                    destination.G = source.G;
-                    destination.B = source.B;
-                    destination.A = source.A;
-                    break;
-
-                case PixelMode.AlphaBlend:
-                    float blendFactor = 1.0f;
-                    float a = (source.A / 255.0f) * blendFactor;
-                    float c = 1.0f - a;
-                    float r = a * source.R + c * destination.R;
-                    float g = a * source.G + c * destination.G;
-                    float b = a * source.B + c * destination.B;
-
-                    destination.R = (byte)r;
-                    destination.G = (byte)g;
-                    destination.B = (byte)b;
-                    break;
-            }
+            DrawTarget = null!;
         }
 
         public void DrawFilledRectangle(Pixel pixel, Rectangle rectangle, PixelMode pixelMode = PixelMode.Overwrite)
         {
             EnsureDrawInProgress();
 
-            for (int y = 0; y < rectangle.Height; y++)
-            {
-                for (int x = 0; x < rectangle.Width; x++)
-                {
-                    DrawPixel(
-                        ref _drawTarget.Pixels[((rectangle.Y + y) * _drawTarget.Width) + rectangle.X + x],
-                        ref pixel,
-                        pixelMode);
-                }
-            }
+            PlatformDrawFilledRectangle(pixel, rectangle, pixelMode);
         }
+
+        protected abstract void PlatformDrawFilledRectangle(Pixel pixel, Rectangle rectangle, PixelMode pixelMode);
 
         public void DrawFilledRectangle(Func<Point, Pixel> pixelFunc, Rectangle rectangle, PixelMode pixelMode = PixelMode.Overwrite)
         {
+            Guard.NotNull(pixelFunc, nameof(pixelFunc));
+
             EnsureDrawInProgress();
 
-            for (int y = 0; y < rectangle.Height; y++)
-            {
-                for (int x = 0; x < rectangle.Width; x++)
-                {
-                    var pixel = pixelFunc(new Point(x, y));
-                    DrawPixel(
-                        ref _drawTarget.Pixels[((rectangle.Y + y) * _drawTarget.Width) + rectangle.X + x],
-                        ref pixel,
-                        pixelMode);
-                }
-            }
+            PlatformDrawFilledRectangle(pixelFunc, rectangle, pixelMode);
         }
+
+        protected abstract void PlatformDrawFilledRectangle(Func<Point, Pixel> pixelFunc, Rectangle rectangle, PixelMode pixelMode);
 
         public void DrawSprite(Surface surface, in Vector2 destination, Rectangle? source = null, PixelMode pixelMode = PixelMode.Overwrite)
         {
@@ -197,48 +147,9 @@ namespace PixelEngineDotNet.Graphics
             if (source == null)
                 source = new Rectangle(0, 0, surface.Width, surface.Height);
 
-            for (int y = 0; y < source.Value.Height; y++)
-            {
-                int srcY = source.Value.Y + y;
-
-                if (srcY < 0)
-                    continue;
-
-                if (srcY >= surface.Height)
-                    break;
-
-                int destY = (int)(destination.Y + y);
-
-                if (destY < 0)
-                    continue;
-
-                if (destY >= _drawTarget.Height)
-                    break;
-
-                for (int x = 0; x < source.Value.Width; x++)
-                {
-                    int srcX = source.Value.X + x;
-
-                    if (srcX < 0)
-                        continue;
-
-                    if (srcX >= surface.Width)
-                        break;
-
-                    int destX = (int)(destination.X + x);
-
-                    if (destX < 0)
-                        continue;
-
-                    if (destX >= _drawTarget.Width)
-                        break;
-
-                    DrawPixel(
-                        ref _drawTarget.Pixels[destY * _drawTarget.Width + destX],
-                        ref surface.Pixels[srcY * surface.Width + srcX],
-                        pixelMode);
-                }
-            }
+            PlatformDrawSprite(surface, destination, source.Value, pixelMode);
         }
+
+        protected abstract void PlatformDrawSprite(Surface surface, in Vector2 destination, Rectangle source, PixelMode pixelMode);
     }
 }

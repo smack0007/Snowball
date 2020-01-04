@@ -81,6 +81,8 @@ namespace HelloWorld
 
         protected override void Draw()
         {
+            Graphics.Clear(Graphics.BackBuffer, new Pixel(255, 0, 255, 255));
+
             Graphics.Blit(Graphics.BackBuffer, _backgroundSurface, Point.Zero);
 
             Graphics.BeginDraw(Graphics.BackBuffer);

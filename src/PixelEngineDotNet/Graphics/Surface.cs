@@ -14,7 +14,7 @@ namespace PixelEngineDotNet.Graphics
 
         public int Height { get; }
 
-        internal Pixel[] Pixels { get; }
+        internal uint Handle { get; }
 
         public Surface(GraphicsContext graphics, int width, int height, Pixel[]? pixels = null)
         {
@@ -24,16 +24,10 @@ namespace PixelEngineDotNet.Graphics
             Graphics = graphics ??
                 throw new ArgumentNullException(nameof(graphics));
 
-            if (pixels == null)
-                pixels = new Pixel[width * height];
-
-            var pixelsLength = width * height;
-            if (pixels.Length != pixelsLength)
-                throw new ArgumentException($"Expected length of pixels array to be {pixelsLength} but was {pixels.Length}.", nameof(pixels));
-
             Width = width;
             Height = height;
-            Pixels = pixels;
+
+            Handle = Graphics.AllocateSurface(Width, Height, pixels);
         }
 
         public static Surface FromFile(GraphicsContext graphics, string fileName)
@@ -67,6 +61,6 @@ namespace PixelEngineDotNet.Graphics
         {
         }
 
-        public Pixel[] GetPixels() => Pixels;
+        public Pixel[] GetPixels() => Graphics.GetSurfacePixels(this);
     }
 }
