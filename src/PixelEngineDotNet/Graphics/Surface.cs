@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Numerics;
-using System.Runtime.CompilerServices;
 using PixelEngineDotNet.Images;
 
 namespace PixelEngineDotNet.Graphics
@@ -57,10 +55,10 @@ namespace PixelEngineDotNet.Graphics
             return new Surface(graphics, imageData.Width, imageData.Height, imageData.Pixels);
         }
 
+        public Pixel[] GetPixels() => Graphics.GetSurfacePixels(this);
+
         public void SavePng(string fileName)
         {
         }
-
-        public Pixel[] GetPixels() => Graphics.GetSurfacePixels(this);
     }
 }

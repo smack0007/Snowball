@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using PixelEngineDotNet.Graphics;
 using static PixelEngineDotNet.Platforms.OpenGL.GL;
 using static PixelEngineDotNet.Platforms.Win32.WGL;
@@ -10,9 +11,15 @@ namespace PixelEngineDotNet.Platforms.Software
 {
     public class SoftwareGraphicsContext : GraphicsContext
     {
+        struct SurfaceData
+        {
+            public Pixel[] Pixels;
+            public GCHandle GCHandle;
+        }
+
         private uint _backBufferTexture;
 
-        private Dictionary<uint, Pixel[]> _surfaces = new Dictionary<uint, Pixel[]>();
+        private Dictionary<uint, SurfaceData> _surfaces = new Dictionary<uint, SurfaceData>();
 
         public SoftwareGraphicsContext(GameWindow window, Size backBufferSize)
             : base(window, backBufferSize)
@@ -43,7 +50,7 @@ namespace PixelEngineDotNet.Platforms.Software
 
             unsafe
             {
-                fixed (void* surfacePtr = _surfaces[backBuffer.Handle])
+                fixed (void* surfacePtr = _surfaces[backBuffer.Handle].Pixels)
                 {
                     glTexImage2D(GL_TEXTURE_2D, 0, (int)GL_RGBA, backBufferSize.Width, backBufferSize.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, surfacePtr);
                 }
@@ -68,7 +75,7 @@ namespace PixelEngineDotNet.Platforms.Software
 
             unsafe
             {
-                fixed (void* surfacePtr = _surfaces[BackBuffer.Handle])
+                fixed (void* surfacePtr = _surfaces[BackBuffer.Handle].Pixels)
                 {
                     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, BackBuffer.Width, BackBuffer.Height, GL_RGBA, GL_UNSIGNED_BYTE, surfacePtr);
                 }
@@ -91,19 +98,27 @@ namespace PixelEngineDotNet.Platforms.Software
         protected override uint PlatformAllocateSurface(int width, int height, Pixel[] pixels)
         {
             var handle = (uint)_surfaces.Count;
-            _surfaces[handle] = pixels;
+            
+            var data = new SurfaceData()
+            {
+                Pixels = pixels,
+            };
+
+            data.GCHandle = GCHandle.Alloc(data.Pixels, GCHandleType.Pinned);
+
+            _surfaces[handle] = data;
 
             return handle;
         }
 
         protected override Pixel[] PlatformGetSurfacePixels(Surface surface)
         {
-            return _surfaces[surface.Handle];
+            return _surfaces[surface.Handle].Pixels;
         }
 
         protected override void PlatformClear(Surface surface, Pixel pixel)
         {
-            var pixels = _surfaces[surface.Handle];
+            var pixels = _surfaces[surface.Handle].Pixels;
 
             for (int i = 0; i < pixels.Length; i++)
             {
@@ -113,47 +128,37 @@ namespace PixelEngineDotNet.Platforms.Software
 
         protected override void PlatformBlit(Surface destinationSurface, Surface sourceSurface, in Point destination, Rectangle source)
         {
-            var destinationPixels = _surfaces[destinationSurface.Handle];
-            var sourcePixels = _surfaces[sourceSurface.Handle];
+            var destinationPixelsHandle = _surfaces[destinationSurface.Handle].GCHandle;
+            var sourcePixelsHandle = _surfaces[sourceSurface.Handle].GCHandle;
 
-            for (int y = 0; y < source.Height; y++)
+            unsafe
             {
-                int srcY = source.Y + y;
+                Pixel* destinationPixelsPtr = (Pixel*)destinationPixelsHandle.AddrOfPinnedObject();
+                Pixel* sourcePixelsPtr = (Pixel*)sourcePixelsHandle.AddrOfPinnedObject();
 
-                if (srcY < 0)
-                    continue;
+                destinationPixelsPtr += (destination.Y * destinationSurface.Width) + destination.X;
 
-                if (srcY >= sourceSurface.Height)
-                    break;
+                int count = sourceSurface.Width;
 
-                int destY = (int)(destination.Y + y);
+                if (destination.X + count > destinationSurface.Width)
+                    count = destinationSurface.Width - destination.X;
 
-                if (destY < 0)
-                    continue;
+                int countInBytes = count * Pixel.SizeInBytes;
 
-                if (destY >= destinationSurface.Height)
-                    break;
-
-                for (int x = 0; x < source.Width; x++)
+                for (int y = 0; y < source.Height; y++)
                 {
-                    int srcX = source.X + x;
+                    int destY = destination.Y + y;
 
-                    if (srcX < 0)
+                    if (destY < 0)
                         continue;
 
-                    if (srcX >= sourceSurface.Width)
+                    if (destY >= destinationSurface.Height)
                         break;
 
-                    int destX = (int)(destination.X + x);
+                    Buffer.MemoryCopy(sourcePixelsPtr, destinationPixelsPtr, countInBytes, countInBytes);
 
-                    if (destX < 0)
-                        continue;
-
-                    if (destX >= destinationSurface.Width)
-                        break;
-
-                    destinationPixels[destY * destinationSurface.Width + destX] =
-                        sourcePixels[srcY * sourceSurface.Width + srcX];
+                    destinationPixelsPtr += destinationSurface.Width;
+                    sourcePixelsPtr += sourceSurface.Width;
                 }
             }
         }
@@ -187,7 +192,7 @@ namespace PixelEngineDotNet.Platforms.Software
 
         protected override void PlatformDrawFilledRectangle(Pixel pixel, Rectangle rectangle, PixelMode pixelMode)
         {
-            var drawTargetPixels = _surfaces[DrawTarget.Handle];
+            var drawTargetPixels = _surfaces[DrawTarget.Handle].Pixels;
 
             for (int y = 0; y < rectangle.Height; y++)
             {
@@ -203,7 +208,7 @@ namespace PixelEngineDotNet.Platforms.Software
 
         protected override void PlatformDrawFilledRectangle(Func<Point, Pixel> pixelFunc, Rectangle rectangle, PixelMode pixelMode)
         {
-            var drawTargetPixels = _surfaces[DrawTarget.Handle];
+            var drawTargetPixels = _surfaces[DrawTarget.Handle].Pixels;
 
             for (int y = 0; y < rectangle.Height; y++)
             {
@@ -220,8 +225,8 @@ namespace PixelEngineDotNet.Platforms.Software
 
         protected override void PlatformDrawSprite(Surface surface, in Vector2 destination, Rectangle source, PixelMode pixelMode)
         {
-            var drawTargetPixels = _surfaces[DrawTarget.Handle];
-            var surfacePixels = _surfaces[surface.Handle];
+            var drawTargetPixels = _surfaces[DrawTarget.Handle].Pixels;
+            var surfacePixels = _surfaces[surface.Handle].Pixels;
 
             for (int y = 0; y < source.Height; y++)
             {
