@@ -21,6 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{CE793775
 		build\Project.props = build\Project.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{067FF20D-F3EE-42F9-9940-2AF47EE4E883}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PixelCannon.SoftwareGraphics.Benchmarks", "benchmarks\PixelCannon.SoftwareGraphics.Benchmarks\PixelCannon.SoftwareGraphics.Benchmarks.csproj", "{11A4CD7B-E1CD-4A86-A7FE-7E894FCD81DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,10 @@ Global
 		{34D2D9E2-6A34-4DE6-A562-A9C505A78238}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34D2D9E2-6A34-4DE6-A562-A9C505A78238}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34D2D9E2-6A34-4DE6-A562-A9C505A78238}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11A4CD7B-E1CD-4A86-A7FE-7E894FCD81DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11A4CD7B-E1CD-4A86-A7FE-7E894FCD81DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11A4CD7B-E1CD-4A86-A7FE-7E894FCD81DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11A4CD7B-E1CD-4A86-A7FE-7E894FCD81DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +53,8 @@ Global
 		{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F} = {47AF4C9A-CB61-4374-B62E-0348D4981AA7}
 		{34D2D9E2-6A34-4DE6-A562-A9C505A78238} = {78FF69E5-97D2-4B2F-9723-68F3E128BE04}
 		{CE793775-95E6-4346-A407-A67E0267D9F1} = {AD267C0B-B550-4BD8-ABFC-CAE705624E32}
+		{067FF20D-F3EE-42F9-9940-2AF47EE4E883} = {AD267C0B-B550-4BD8-ABFC-CAE705624E32}
+		{11A4CD7B-E1CD-4A86-A7FE-7E894FCD81DF} = {067FF20D-F3EE-42F9-9940-2AF47EE4E883}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8046D655-0DAE-4986-86AE-8CCBE226F68D}
