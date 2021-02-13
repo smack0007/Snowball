@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 #nullable disable
 
@@ -7,6 +6,8 @@ namespace Snowball.Platforms.OpenGL
 {
     public static unsafe class GL
     {
+        public const string LibraryName = "opengl";
+
         public const uint GL_COLOR_BUFFER_BIT = 0x00004000;
         public const uint GL_NEAREST = 0x2600;
         public const uint GL_QUADS = 0x0007;
@@ -16,60 +17,43 @@ namespace Snowball.Platforms.OpenGL
         public const uint GL_TEXTURE_MIN_FILTER = 0x2801;
         public const uint GL_UNSIGNED_BYTE = 0x1401;
 
-        public delegate void _glBegin(uint mode);
-        public static _glBegin glBegin;
+        [DllImport(LibraryName)]
+        public static extern void glBegin(uint mode);
 
-        public delegate void _glBindTexture(uint target, uint texture);
-        public static _glBindTexture glBindTexture;
+        [DllImport(LibraryName)]
+        public static extern void glBindTexture(uint target, uint texture);
 
-        public delegate void _glClear(uint mask);
-        public static _glClear glClear;
+        [DllImport(LibraryName)]
+        public static extern void glClear(uint mask);
 
-        public delegate void _glClearColor(float red, float green, float blue, float alpha);
-        public static _glClearColor glClearColor;
+        [DllImport(LibraryName)]
+        public static extern void glClearColor(float red, float green, float blue, float alpha);
 
-        public delegate void _glEnable(uint cap);
-        public static _glEnable glEnable;
+        [DllImport(LibraryName)]
+        public static extern void glEnable(uint cap);
 
-        public delegate void _glEnd();
-        public static _glEnd glEnd;
+        [DllImport(LibraryName)]
+        public static extern void glEnd();
 
-        public delegate void _glGenTextures(int n, uint* textures);
-        public static _glGenTextures glGenTextures;
+        [DllImport(LibraryName)]
+        public static extern void glGenTextures(int n, uint* textures);
 
-        public delegate void _glTexCoord2f(float s, float t);
-        public static _glTexCoord2f glTexCoord2f;
+        [DllImport(LibraryName)]
+        public static extern void glTexCoord2f(float s, float t);
 
-        public delegate void _glTexImage2D(uint target, int level, int internalformat, int width, int height, int border, uint format, uint type, void* pixels);
-        public static _glTexImage2D glTexImage2D;
+        [DllImport(LibraryName)]
+        public static extern void glTexImage2D(uint target, int level, int internalformat, int width, int height, int border, uint format, uint type, void* pixels);
 
-        public delegate void _glTexParameteri(uint target, uint pname, int param);
-        public static _glTexParameteri glTexParameteri;
+        [DllImport(LibraryName)]
+        public static extern void glTexParameteri(uint target, uint pname, int param);
 
-        public delegate void _glTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, void* pixels);
-        public static _glTexSubImage2D glTexSubImage2D;
+        [DllImport(LibraryName)]
+        public static extern void glTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, void* pixels);
 
-        public delegate void _glVertex3f(float x, float y, float z);
-        public static _glVertex3f glVertex3f;
+        [DllImport(LibraryName)]
+        public static extern void glVertex3f(float x, float y, float z);
 
-        public delegate void _glViewport(int x, int y, int width, int height);
-        public static _glViewport glViewport;
-
-        public static void glInit(Func<string, IntPtr> getProcAddress)
-        {
-            glBegin = Marshal.GetDelegateForFunctionPointer<_glBegin>(getProcAddress(nameof(glBegin)));
-            glBindTexture = Marshal.GetDelegateForFunctionPointer<_glBindTexture>(getProcAddress(nameof(glBindTexture)));
-            glClear = Marshal.GetDelegateForFunctionPointer<_glClear>(getProcAddress(nameof(glClear)));
-            glClearColor = Marshal.GetDelegateForFunctionPointer<_glClearColor>(getProcAddress(nameof(glClearColor)));
-            glEnable = Marshal.GetDelegateForFunctionPointer<_glEnable>(getProcAddress(nameof(glEnable)));
-            glEnd = Marshal.GetDelegateForFunctionPointer<_glEnd>(getProcAddress(nameof(glEnd)));
-            glGenTextures = Marshal.GetDelegateForFunctionPointer<_glGenTextures>(getProcAddress(nameof(glGenTextures)));
-            glTexCoord2f = Marshal.GetDelegateForFunctionPointer<_glTexCoord2f>(getProcAddress(nameof(glTexCoord2f)));
-            glTexImage2D = Marshal.GetDelegateForFunctionPointer<_glTexImage2D>(getProcAddress(nameof(glTexImage2D)));
-            glTexParameteri = Marshal.GetDelegateForFunctionPointer<_glTexParameteri>(getProcAddress(nameof(glTexParameteri)));
-            glTexSubImage2D = Marshal.GetDelegateForFunctionPointer<_glTexSubImage2D>(getProcAddress(nameof(glTexSubImage2D)));
-            glVertex3f = Marshal.GetDelegateForFunctionPointer<_glVertex3f>(getProcAddress(nameof(glVertex3f)));
-            glViewport = Marshal.GetDelegateForFunctionPointer<_glViewport>(getProcAddress(nameof(glClearColor)));
-        }
+        [DllImport(LibraryName)]
+        public static extern void glViewport(int x, int y, int width, int height);
     }
 }

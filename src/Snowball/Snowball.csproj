@@ -4,10 +4,11 @@
     <TargetFramework>net5.0</TargetFramework>
     <DefineConstants>WIN32;GL;$(DefineConstants)</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(RepositoryRootDirectory)License.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
+    <None Include="$(RepositoryRootDirectory)License.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
 
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>

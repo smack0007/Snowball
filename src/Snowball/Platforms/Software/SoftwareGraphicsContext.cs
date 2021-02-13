@@ -29,7 +29,6 @@ namespace Snowball.Platforms.Software
         protected override PlatformInitializeResult PlatformInitialize(Size backBufferSize)
         {
             wglInit(Window.Handle, 2, 1);
-            glInit(wglGetProcAddress);
 
             glClearColor(0, 0, 0, 1.0f);
             glEnable(GL_TEXTURE_2D);
