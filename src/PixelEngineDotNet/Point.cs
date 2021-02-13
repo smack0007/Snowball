@@ -23,7 +23,7 @@ namespace PixelEngineDotNet
 
         public override string ToString() => $"{{ {X}, {Y} }}";
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null)
                 return false;

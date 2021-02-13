@@ -39,7 +39,7 @@ namespace PixelEngineDotNet
                     hCursor = LoadCursor(IntPtr.Zero, IDC_ARROW),
                     hbrBackground = (IntPtr)(COLOR_WINDOW + 1),
                     lpszMenuName = null,
-                    lpszClassName = typeof(GameWindow).FullName,
+                    lpszClassName = typeof(GameWindow).FullName!,
                     hIconSm = LoadIcon(IntPtr.Zero, IDI_APPLICATION)
                 };
 
@@ -51,7 +51,7 @@ namespace PixelEngineDotNet
 
             _hWnd = CreateWindowEx(
                 WS_EX_APPWINDOW | WS_EX_WINDOWEDGE,
-                typeof(GameWindow).FullName,
+                typeof(GameWindow).FullName!,
                 string.Empty,
                 WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPED | WS_CAPTION,
                 CW_USEDEFAULT,
