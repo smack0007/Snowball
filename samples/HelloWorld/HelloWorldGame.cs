@@ -7,7 +7,7 @@ namespace HelloWorld
 {
     public class HelloWorldGame : Game
     {
-        private const int SNOWBALL_COUNT = 400;
+        private const int SNOWBALL_COUNT = 300;
         private const float SNOWBALL_MOVEMENT_FACTOR = 10.0f;
 
         private Vector2 _center;
