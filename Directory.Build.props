@@ -19,10 +19,6 @@
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)License.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
-  </ItemGroup>
-
   <Import Project="$(MSBuildThisFileDirectory)/build/Project.props" />
   <Import Project="$(MSBuildThisFileDirectory)/build/GitVersion.targets" />
 </Project>

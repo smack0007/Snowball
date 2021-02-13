@@ -1,8 +1,8 @@
 <Project>
   <PropertyGroup>
-    <RepositoryUrl>https://github.com/smack0007/PixelEngineDotNet.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/smack0007/Snowball.git</RepositoryUrl>
 
-    <PackageProjectUrl>https://github.com/smack0007/PixelEngineDotNet/</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/smack0007/Snowball/</PackageProjectUrl>
     <PackageTags>C#;.NET;Graphics</PackageTags>
 
     <LangVersion>8.0</LangVersion>
