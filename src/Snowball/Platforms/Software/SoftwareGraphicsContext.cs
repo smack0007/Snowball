@@ -189,25 +189,25 @@ namespace Snowball.Platforms.Software
             }
         }
 
-        protected override void PlatformDrawFilledRectangle(Pixel pixel, Rectangle rectangle, PixelMode pixelMode)
+        protected override void PlatformDrawFilledRectangle(Surface surface, Pixel pixel, Rectangle rectangle, PixelMode pixelMode)
         {
-            var drawTargetPixels = _surfaces[DrawTarget.Handle].Pixels;
+            var drawTargetPixels = _surfaces[surface.Handle].Pixels;
 
             for (int y = 0; y < rectangle.Height; y++)
             {
                 for (int x = 0; x < rectangle.Width; x++)
                 {
                     DrawPixel(
-                        ref drawTargetPixels[((rectangle.Y + y) * DrawTarget.Width) + rectangle.X + x],
+                        ref drawTargetPixels[((rectangle.Y + y) * surface.Width) + rectangle.X + x],
                         ref pixel,
                         pixelMode);
                 }
             }
         }
 
-        protected override void PlatformDrawFilledRectangle(Func<Point, Pixel> pixelFunc, Rectangle rectangle, PixelMode pixelMode)
+        protected override void PlatformDrawFilledRectangle(Surface surface, Func<Point, Pixel> pixelFunc, Rectangle rectangle, PixelMode pixelMode)
         {
-            var drawTargetPixels = _surfaces[DrawTarget.Handle].Pixels;
+            var drawTargetPixels = _surfaces[surface.Handle].Pixels;
 
             for (int y = 0; y < rectangle.Height; y++)
             {
@@ -215,17 +215,22 @@ namespace Snowball.Platforms.Software
                 {
                     var pixel = pixelFunc(new Point(x, y));
                     DrawPixel(
-                        ref drawTargetPixels[((rectangle.Y + y) * DrawTarget.Width) + rectangle.X + x],
+                        ref drawTargetPixels[((rectangle.Y + y) * surface.Width) + rectangle.X + x],
                         ref pixel,
                         pixelMode);
                 }
             }
         }
 
-        protected override void PlatformDrawSprite(Surface surface, in Vector2 destination, Rectangle source, PixelMode pixelMode)
+        protected override void PlatformDrawSprite(
+            Surface destinationSurface,
+            Surface sourceSurface,
+            in Vector2 destination,
+            Rectangle source,
+            PixelMode pixelMode)
         {
-            var drawTargetPixels = _surfaces[DrawTarget.Handle].Pixels;
-            var surfacePixels = _surfaces[surface.Handle].Pixels;
+            var drawTargetPixels = _surfaces[destinationSurface.Handle].Pixels;
+            var surfacePixels = _surfaces[sourceSurface.Handle].Pixels;
 
             for (int y = 0; y < source.Height; y++)
             {
@@ -234,7 +239,7 @@ namespace Snowball.Platforms.Software
                 if (srcY < 0)
                     continue;
 
-                if (srcY >= surface.Height)
+                if (srcY >= sourceSurface.Height)
                     break;
 
                 int destY = (int)(destination.Y + y);
@@ -242,7 +247,7 @@ namespace Snowball.Platforms.Software
                 if (destY < 0)
                     continue;
 
-                if (destY >= DrawTarget.Height)
+                if (destY >= destinationSurface.Height)
                     break;
 
                 for (int x = 0; x < source.Width; x++)
@@ -252,7 +257,7 @@ namespace Snowball.Platforms.Software
                     if (srcX < 0)
                         continue;
 
-                    if (srcX >= surface.Width)
+                    if (srcX >= sourceSurface.Width)
                         break;
 
                     int destX = (int)(destination.X + x);
@@ -260,15 +265,20 @@ namespace Snowball.Platforms.Software
                     if (destX < 0)
                         continue;
 
-                    if (destX >= DrawTarget.Width)
+                    if (destX >= destinationSurface.Width)
                         break;
 
                     DrawPixel(
-                        ref drawTargetPixels[destY * DrawTarget.Width + destX],
-                        ref surfacePixels[srcY * surface.Width + srcX],
+                        ref drawTargetPixels[destY * destinationSurface.Width + destX],
+                        ref surfacePixels[srcY * sourceSurface.Width + srcX],
                         pixelMode);
                 }
             }
+        }
+
+        protected override void PlatformFlush()
+        {
+            // Software renderer doesn't need to do anything in Flush().
         }
     }
 }

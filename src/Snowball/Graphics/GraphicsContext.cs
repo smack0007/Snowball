@@ -9,9 +9,6 @@ namespace Snowball.Graphics
 
         public Surface BackBuffer { get; private set; }
 
-        private bool _drawInProgress;
-        protected Surface DrawTarget { get; set; } = null!;
-
         internal GraphicsContext(GameWindow window, Size backBufferSize)
         {
             Guard.NotNull(window, nameof(window));
@@ -92,63 +89,61 @@ namespace Snowball.Graphics
 
         protected abstract void PlatformBlit(Surface destinationSurface, Surface sourceSurface, in Point destination, Rectangle source);
 
-        public void BeginDraw(Surface surface)
+        public void DrawFilledRectangle(Surface surface, Pixel pixel, Rectangle rectangle, PixelMode pixelMode = PixelMode.Overwrite)
         {
             Guard.NotNull(surface, nameof(surface));
 
-            if (_drawInProgress)
-                throw new SnowballException("Draw is already in progress.");
-
-            _drawInProgress = true;
-            DrawTarget = surface;
+            PlatformDrawFilledRectangle(surface, pixel, rectangle, pixelMode);
         }
 
-        private void EnsureDrawInProgress()
-        {
-            if (!_drawInProgress)
-                throw new SnowballException("Draw is not currently in progress.");
-        }
+        protected abstract void PlatformDrawFilledRectangle(Surface surface, Pixel pixel, Rectangle rectangle, PixelMode pixelMode);
 
-        public void EndDraw()
-        {
-            EnsureDrawInProgress();
-
-            _drawInProgress = false;
-            DrawTarget = null!;
-        }
-
-        public void DrawFilledRectangle(Pixel pixel, Rectangle rectangle, PixelMode pixelMode = PixelMode.Overwrite)
-        {
-            EnsureDrawInProgress();
-
-            PlatformDrawFilledRectangle(pixel, rectangle, pixelMode);
-        }
-
-        protected abstract void PlatformDrawFilledRectangle(Pixel pixel, Rectangle rectangle, PixelMode pixelMode);
-
-        public void DrawFilledRectangle(Func<Point, Pixel> pixelFunc, Rectangle rectangle, PixelMode pixelMode = PixelMode.Overwrite)
-        {
-            Guard.NotNull(pixelFunc, nameof(pixelFunc));
-
-            EnsureDrawInProgress();
-
-            PlatformDrawFilledRectangle(pixelFunc, rectangle, pixelMode);
-        }
-
-        protected abstract void PlatformDrawFilledRectangle(Func<Point, Pixel> pixelFunc, Rectangle rectangle, PixelMode pixelMode);
-
-        public void DrawSprite(Surface surface, in Vector2 destination, Rectangle? source = null, PixelMode pixelMode = PixelMode.Overwrite)
+        public void DrawFilledRectangle(
+            Surface surface,
+            Func<Point, Pixel> pixelFunc,
+            Rectangle rectangle,
+            PixelMode pixelMode = PixelMode.Overwrite)
         {
             Guard.NotNull(surface, nameof(surface));
+            Guard.NotNull(pixelFunc, nameof(pixelFunc));            
 
-            EnsureDrawInProgress();
+            PlatformDrawFilledRectangle(surface, pixelFunc, rectangle, pixelMode);
+        }
+
+        protected abstract void PlatformDrawFilledRectangle(
+            Surface surface,
+            Func<Point, Pixel> pixelFunc,
+            Rectangle rectangle,
+            PixelMode pixelMode);
+
+        public void DrawSprite(
+            Surface destinationSurface,
+            Surface sourceSurface,
+            in Vector2 destination,
+            Rectangle? source = null,
+            PixelMode pixelMode = PixelMode.Overwrite)
+        {
+            Guard.NotNull(destinationSurface, nameof(destinationSurface));
+            Guard.NotNull(sourceSurface, nameof(sourceSurface));
 
             if (source == null)
-                source = new Rectangle(0, 0, surface.Width, surface.Height);
+                source = new Rectangle(0, 0, sourceSurface.Width, sourceSurface.Height);
 
-            PlatformDrawSprite(surface, destination, source.Value, pixelMode);
+            PlatformDrawSprite(destinationSurface, sourceSurface, destination, source.Value, pixelMode);
         }
 
-        protected abstract void PlatformDrawSprite(Surface surface, in Vector2 destination, Rectangle source, PixelMode pixelMode);
+        protected abstract void PlatformDrawSprite(
+            Surface destinationSurface,
+            Surface sourceSurface,
+            in Vector2 destination,
+            Rectangle source,
+            PixelMode pixelMode);
+
+        public void Flush()
+        {
+            PlatformFlush();
+        }
+
+        protected abstract void PlatformFlush();
     }
 }
