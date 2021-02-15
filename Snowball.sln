@@ -16,14 +16,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Snowball", "Snowball", "{AD
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{CE793775-95E6-4346-A407-A67E0267D9F1}"
-	ProjectSection(SolutionItems) = preProject
-		build\Project.props = build\Project.props
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{067FF20D-F3EE-42F9-9940-2AF47EE4E883}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Snowball.SoftwareGraphics.Benchmarks", "benchmarks\Snowball.SoftwareGraphics.Benchmarks\Snowball.SoftwareGraphics.Benchmarks.csproj", "{F7E2E04E-96B3-4245-9312-677362CE85F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{86260600-155D-41B2-8109-CEC653DEB442}"
+	ProjectSection(SolutionItems) = preProject
+		build\Build.proj = build\Build.proj
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,9 +52,9 @@ Global
 		{78FF69E5-97D2-4B2F-9723-68F3E128BE04} = {AD267C0B-B550-4BD8-ABFC-CAE705624E32}
 		{FBEFB3AE-2C42-4D02-8CAB-F02535111A0F} = {47AF4C9A-CB61-4374-B62E-0348D4981AA7}
 		{34D2D9E2-6A34-4DE6-A562-A9C505A78238} = {78FF69E5-97D2-4B2F-9723-68F3E128BE04}
-		{CE793775-95E6-4346-A407-A67E0267D9F1} = {AD267C0B-B550-4BD8-ABFC-CAE705624E32}
 		{067FF20D-F3EE-42F9-9940-2AF47EE4E883} = {AD267C0B-B550-4BD8-ABFC-CAE705624E32}
 		{F7E2E04E-96B3-4245-9312-677362CE85F9} = {067FF20D-F3EE-42F9-9940-2AF47EE4E883}
+		{86260600-155D-41B2-8109-CEC653DEB442} = {AD267C0B-B550-4BD8-ABFC-CAE705624E32}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8046D655-0DAE-4986-86AE-8CCBE226F68D}

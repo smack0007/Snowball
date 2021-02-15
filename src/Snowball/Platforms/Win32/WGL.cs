@@ -1,6 +1,4 @@
-﻿#if WIN32
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace Snowball.Platforms.Win32
@@ -195,5 +193,3 @@ namespace Snowball.Platforms.Win32
         }
     }
 }
-
-#endif
