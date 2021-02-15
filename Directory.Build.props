@@ -17,8 +17,13 @@
 
     <!-- Tells Visual Studio to always run MSBuild. -->
     <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
-  </PropertyGroup>
 
-  <Import Project="$(MSBuildThisFileDirectory)/build/Project.props" />
-  <Import Project="$(MSBuildThisFileDirectory)/build/GitVersion.targets" />
+    <RepositoryUrl>https://github.com/smack0007/Snowball.git</RepositoryUrl>
+
+    <PackageProjectUrl>https://github.com/smack0007/Snowball/</PackageProjectUrl>
+    <PackageTags>C#;.NET;Graphics</PackageTags>
+
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 </Project>

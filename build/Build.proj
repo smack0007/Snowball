@@ -1,8 +1,4 @@
 <Project DefaultTargets="Build">
-  <PropertyGroup>
-    <UseGitVersion>true</UseGitVersion>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
 
   <ItemGroup>
@@ -12,7 +8,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <BuildArgs>-nologo -v:n -c Release -p:UseGitVersion=true</BuildArgs>
+    <BuildArgs>-nologo -v:n -c Release</BuildArgs>
   </PropertyGroup>
   
   <!--
