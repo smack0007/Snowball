@@ -8,7 +8,7 @@ namespace HelloWorld
     public class HelloWorldGame : Game
     {
         private const int SNOWBALL_COUNT = 300;
-        private const float SNOWBALL_MOVEMENT_FACTOR = 10.0f;
+        private const float SNOWBALL_MOVEMENT_FACTOR = 1.0f;
 
         private Vector2 _center;
         private Surface _backgroundSurface;
@@ -84,8 +84,17 @@ namespace HelloWorld
 
             Graphics.Blit(Graphics.BackBuffer, _backgroundSurface, Point.Zero);
 
+            var center = new Vector2(Graphics.BackBuffer.Width / 2, Graphics.BackBuffer.Height / 2);
+
             for (int i = 0; i < SNOWBALL_COUNT; i++)
             {
+                Graphics.DrawLine(
+                    Graphics.BackBuffer,
+                    new Pixel(255, 0, 255, 255),
+                    center,
+                    _snowballPositions[i],
+                    pixelMode: PixelMode.AlphaBlend);
+
                 Graphics.DrawSprite(
                     Graphics.BackBuffer,
                     _snowballSurface,

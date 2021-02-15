@@ -189,6 +189,83 @@ namespace Snowball.Platforms.Software
             }
         }
 
+        protected override void PlatformDrawLine(Surface surface, Pixel pixel, Vector2 p1, Vector2 p2, PixelMode pixelMode)
+        {
+            var drawTargetPixels = _surfaces[surface.Handle].Pixels;
+
+            if (p1.X == p2.X) // Is line vertical?
+            {
+                // We want to draw from top to bottom
+                if (p1.Y > p2.Y)
+                {
+                    var temp = p1;
+                    p1 = p2;
+                    p2 = temp;
+                }
+
+                int x = (int)Math.Round(p1.X);
+                int y = (int)Math.Round(p1.Y);
+                int y2 = (int)Math.Round(p2.Y);
+
+                if (y < 0)
+                    y = 0;
+
+                for (; y <= y2; y++)
+                {
+                    if (y >= surface.Height)
+                        break;
+
+                    DrawPixel(
+                        ref drawTargetPixels[y * surface.Width + x],
+                        ref pixel,
+                        pixelMode);
+                }
+            }
+            else
+            {
+                // We want to draw from left to right
+                if (p1.X > p2.X)
+                {
+                    var temp = p1;
+                    p1 = p2;
+                    p2 = temp;
+                }
+
+                Vector2 delta = p2 - p1;
+                float deltaError = Math.Abs(delta.Y / delta.X);
+
+                float error = 0.0f;
+                int x = (int)Math.Round(p1.X);
+                int y = (int)Math.Round(p1.Y);
+
+                int x2 = (int)Math.Round(p2.X);
+                int ySign = Math.Sign(delta.Y);
+
+                for (; x <= x2; x++)
+                {
+                    // If we've gone past the width of the surface we can quit.
+                    if (x >= surface.Width)
+                        break;
+
+                    // Only plot the pixel if we're inside the bounds
+                    if (x >= 0 && y >= 0 && y < surface.Height)
+                    {
+                        DrawPixel(
+                            ref drawTargetPixels[y * surface.Width + x],
+                            ref pixel,
+                            pixelMode);
+                    }
+
+                    error += deltaError;
+                    if (error >= 0.5f)
+                    {
+                        y += ySign;
+                        error -= 1.0f;
+                    }
+                }
+            }
+        }
+
         protected override void PlatformDrawFilledRectangle(Surface surface, Pixel pixel, Rectangle rectangle, PixelMode pixelMode)
         {
             var drawTargetPixels = _surfaces[surface.Handle].Pixels;

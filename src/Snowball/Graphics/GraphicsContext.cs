@@ -89,6 +89,15 @@ namespace Snowball.Graphics
 
         protected abstract void PlatformBlit(Surface destinationSurface, Surface sourceSurface, in Point destination, Rectangle source);
 
+        public void DrawLine(Surface surface, Pixel pixel, Vector2 p1, Vector2 p2, PixelMode pixelMode = PixelMode.Overwrite)
+        {
+            Guard.NotNull(surface, nameof(surface));
+
+            PlatformDrawLine(surface, pixel, p1, p2, pixelMode);
+        }
+
+        protected abstract void PlatformDrawLine(Surface surface, Pixel pixel, Vector2 p1, Vector2 p2, PixelMode pixelMode);
+
         public void DrawFilledRectangle(Surface surface, Pixel pixel, Rectangle rectangle, PixelMode pixelMode = PixelMode.Overwrite)
         {
             Guard.NotNull(surface, nameof(surface));
