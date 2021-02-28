@@ -1,0 +1,5 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <Import Project="$(RepositoryRootDirectory)build/CopyDependencies.targets" />
+</Project>

@@ -1,0 +1,15 @@
+﻿<Project>
+  <PropertyGroup>
+    <ANGLEDirectory>$(MSBuildThisFileDirectory)../ext/ANGLE/</ANGLEDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ANGLEWinX64Assemblies Include="$(ANGLEDirectory)win-x64/**/*" />
+  </ItemGroup>
+  
+  <Target Name="CopyANGLE" AfterTargets="AfterBuild">    
+    <Copy
+      SourceFiles="@(ANGLEWinX64Assemblies)"
+      DestinationFolder="$(TargetDir)runtimes/win-x64/native" />
+  </Target>
+</Project>
