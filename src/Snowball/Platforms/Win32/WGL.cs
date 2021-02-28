@@ -20,19 +20,19 @@ namespace Snowball.Platforms.Win32
         public const uint PFD_MAIN_PLANE = 0;
 
         [DllImport(Library, EntryPoint = "wglCreateContext", ExactSpelling = true)]
-        public static extern IntPtr CreateContext(IntPtr hDc);
+        public static extern IntPtr wglCreateContext(IntPtr hDc);
 
         [DllImport(Library, EntryPoint = "wglDeleteContext", ExactSpelling = true)]
-        public static extern bool DeleteContext(IntPtr oldContext);
+        public static extern bool wglDeleteContext(IntPtr oldContext);
 
         [DllImport(Library, EntryPoint = "wglGetProcAddress", ExactSpelling = true)]
-        private static extern IntPtr GetProcAddressWgl(string lpszProc);
+        private static extern IntPtr _wglGetProcAddress(string lpszProc);
 
         [DllImport(Library, EntryPoint = "wglMakeCurrent", ExactSpelling = true)]
-        public static extern bool MakeCurrent(IntPtr hDc, IntPtr newContext);
+        public static extern bool wglMakeCurrent(IntPtr hDc, IntPtr newContext);
 
         [DllImport(Library, EntryPoint = "wglSwapBuffers", ExactSpelling = true)]
-        public static extern bool SwapBuffers(IntPtr hdc);
+        public static extern bool wglSwapBuffers(IntPtr hdc);
 
         private delegate bool _wglSwapIntervalEXT(int interval);
 
@@ -126,12 +126,12 @@ namespace Snowball.Platforms.Win32
             if (SetPixelFormat(hDC, pixelformat, ref pfd) == 0)
                 throw new InvalidOperationException("Could not set the pixel format.");
 
-            IntPtr tempContext = CreateContext(hDC);
+            IntPtr tempContext = wglCreateContext(hDC);
 
             if (tempContext == IntPtr.Zero)
                 throw new InvalidOperationException("Unable to create temporary render context.");
 
-            if (!MakeCurrent(hDC, tempContext))
+            if (!wglMakeCurrent(hDC, tempContext))
                 throw new InvalidOperationException("Unable to make temporary render context current.");
 
             int[] attribs = new int[]
@@ -142,17 +142,17 @@ namespace Snowball.Platforms.Win32
                 0
             };
 
-            IntPtr proc = GetProcAddressWgl("wglCreateContextAttribsARB");
+            IntPtr proc = wglGetProcAddress("wglCreateContextAttribsARB");
             _CreateContextAttribsARB createContextAttribs = (_CreateContextAttribsARB)Marshal.GetDelegateForFunctionPointer(proc, typeof(_CreateContextAttribsARB));
             hRC = createContextAttribs(hDC, IntPtr.Zero, attribs);
 
-            MakeCurrent(IntPtr.Zero, IntPtr.Zero);
-            DeleteContext(tempContext);
+            wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
+            wglDeleteContext(tempContext);
 
             if (hRC == IntPtr.Zero)
                 throw new InvalidOperationException("Unable to create render context.");
 
-            if (!MakeCurrent(hDC, hRC))
+            if (!wglMakeCurrent(hDC, hRC))
                 throw new InvalidOperationException("Unable to make render context current.");
 
             hModule = LoadLibrary(Library);
@@ -164,15 +164,15 @@ namespace Snowball.Platforms.Win32
 
         public static void wglShutdown()
         {
-            MakeCurrent(IntPtr.Zero, IntPtr.Zero);
-            DeleteContext(hRC);
+            wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
+            wglDeleteContext(hRC);
 
             ReleaseDC(hWnd, hDC);
         }
 
         public static IntPtr wglGetProcAddress(string name)
         {
-            IntPtr procAddress = GetProcAddressWgl(name);
+            IntPtr procAddress = _wglGetProcAddress(name);
 
             if (procAddress == IntPtr.Zero)
             {
@@ -184,12 +184,12 @@ namespace Snowball.Platforms.Win32
 
         public static void wglMakeCurrent()
         {
-            MakeCurrent(hDC, hRC);
+            wglMakeCurrent(hDC, hRC);
         }
 
         public static void wglSwapBuffers()
         {
-            SwapBuffers(hDC);
+            wglSwapBuffers(hDC);
         }
     }
 }
